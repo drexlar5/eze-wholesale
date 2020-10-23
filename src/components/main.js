@@ -24,14 +24,14 @@ function Main({ children }) {
   React.useEffect(() => {
     setCategory(state?.category);
     if (state?.data) {
-      setSearchData(state.query);
+      setSearchData(state?.query);
       resolvedData = state.data;
     }
     console.log("page", pageNumber, state, resolvedData);
     if (latestData?.data.pages !== pageNumber) {
-      if (state.query) {
+      if (state?.query) {
         queryCache.prefetchQuery(
-          ["products", { page, limit }, state.query, category],
+          ["products", { page, limit }, state?.query, category],
           searchProducts
         );
       } else {
