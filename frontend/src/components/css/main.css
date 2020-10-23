@@ -1,0 +1,91 @@
+.card {
+  width: 18rem;
+  margin: 0.5rem;
+  margin-right: 1rem;
+  background: #1e242f;
+  display: flex;
+}
+
+.button-div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.price {
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: white;
+}
+
+.button {
+  width: 65%;
+  background-color: #007ee5;
+}
+
+.text {
+  color: white;
+}
+
+.title {
+  color: white;
+}
+
+h5 {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem;
+}
+
+.badge {
+  background-color: #1e242f;
+  border-style: solid;
+  border-width: 0.05rem;
+  border-color: white;
+  width: 3rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem;
+  padding-right: 1.5rem;
+}
+
+.card-row {
+  padding: 0;
+}
+
+@media only screen and (max-width: 1024px) {
+  .card {
+    margin-right: 2rem;
+    margin-left: 3rem;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .card {
+    margin-right: 0;
+    width: 15rem;
+  }
+
+  .pagination {
+    padding-right: .5rem;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .card-row {
+    justify-content: center;
+  }
+  .card {
+    width: 18rem;
+    margin-left: 1rem;
+  }
+  .pagination {
+    justify-content: center;
+    padding-right: .5rem;
+  }
+}
