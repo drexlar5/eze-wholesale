@@ -9,7 +9,8 @@ export const getProducts = async (
   category = "buyRequests"
 ) => {
   try {
-    let min, max;
+    let min = null;
+    let max = null;
     if (!category) category = "buyRequests";
 
     if (query && typeof query === "object") {

@@ -158,21 +158,10 @@ function Main({ children }) {
       <div className={"pagination"}>
         {resolvedData?.data.pages < 1 ? (
           <div className="spinner-div">
-            <Spinner
-              animation="border"
-              role="status"
-              variant="primary"
-              className="spinner"
-            >
-              {console.log('vbh', resolvedData?.page)}
-              <span className="sr-only">Loading...</span>
-            </Spinner>
-            <h2>Database is empty</h2>
-            <p>To view Products upload excel file with the correct format</p>
+            <h2>No data to  Display </h2>
           </div>
         ) : (
           <Pagination>
-            {console.log("jbjj", resolvedData?.data.pages)}
             <Pagination.First
               onClick={() => setPageNumber(1)}
               disabled={pageNumber === 1}

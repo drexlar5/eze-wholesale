@@ -61,13 +61,11 @@ function Navbar() {
     }
     getProductsField(filter);
     event.target.reset();
-    setFilter(null)
   };
 
   const handleChange = (event) => {
     event.preventDefault();
     const currentPath = event.target.files;
-    console.log(currentPath[0])
     setState(currentPath[0]);
   };
 

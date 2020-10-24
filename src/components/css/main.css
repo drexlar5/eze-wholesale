@@ -58,11 +58,6 @@ h5 {
   padding: 0;
 }
 
-.spinner {
-  width: 10rem;
-  height: 10rem;
-}
-
 .spinner-div {
   width: 100%;
   height: 50vh;
@@ -72,11 +67,8 @@ h5 {
   align-items: center;
 }
 
-.spinner-div h2, p {
+.spinner-div h2 {
   color: white;
-}
-
-.spinner-div  p {
   text-align: center;
 }
 
@@ -106,8 +98,14 @@ h5 {
     width: 18rem;
     margin-left: 1rem;
   }
+
   .pagination {
     justify-content: center;
     padding-right: .5rem;
+  }
+
+  .spinner {
+    width: 5rem;
+    height: 5rem;
   }
 }
