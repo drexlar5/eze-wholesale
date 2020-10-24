@@ -1,4 +1,5 @@
 import swal from "sweetalert";
+import { navigate } from "@reach/router";
 import { axiosInstance } from "../config/axios";
 
 export const getProducts = async (
@@ -16,7 +17,7 @@ export const getProducts = async (
       max = query.max;
       query = null;
     }
-    
+
     const { data } = await axiosInstance.get(
       `/products?category=${category}&page=${page}&perPage=${limit}&query=${query}&min=${min}&max=${max}`,
       {
@@ -41,8 +42,10 @@ export const saveProducts = async (value) => {
       },
     });
     swal("Success", `${data.message}`, "success");
+    navigate("/");
     return data;
   } catch (err) {
-    swal("Error", `${err.response.data.message}`, "error");
+    swal("Error", `${err.response.statusText}`, "error");
+    return "";
   }
 };

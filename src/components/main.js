@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import swal from "sweetalert";
-import { Card, Button, Badge } from "react-bootstrap";
+import { Card, Button, Badge, Spinner } from "react-bootstrap";
 import { Row, Pagination } from "react-bootstrap";
 import { useQueryCache, usePaginatedQuery } from "react-query";
 
@@ -151,34 +151,57 @@ function Main({ children }) {
     <>
       <Row className={"card-row"}>
         {resolvedData?.data &&
-          resolvedData?.data?.paginatedData?.map((data, index) => dataObj(data, index))}
+          resolvedData?.data?.paginatedData?.map((data, index) =>
+            dataObj(data, index)
+          )}
       </Row>
       <div className={"pagination"}>
-        <Pagination>
-          <Pagination.First
-            onClick={() => setPageNumber(1)}
-            disabled={pageNumber === 1}
-          />
-          <Pagination.Prev
-            onClick={() => setPageNumber((old) => Math.max(old - 1, 0))}
-            disabled={pageNumber === 1}
-          />
-          {resolvedData && renderPaginationButton()}
-          <Pagination.Next
-            onClick={() =>
-              setPageNumber((old) =>
-                !latestData || resolvedData?.data.pages === pageNumber
-                  ? old
-                  : old + 1
-              )
-            }
-            disabled={!resolvedData || resolvedData?.data.pages === pageNumber}
-          />
-          <Pagination.Last
-            onClick={() => setPageNumber(resolvedData?.data.pages)}
-            disabled={!resolvedData || resolvedData?.data.pages === pageNumber}
-          />
-        </Pagination>
+        {resolvedData?.data.pages < 1 ? (
+          <div className="spinner-div">
+            <Spinner
+              animation="border"
+              role="status"
+              variant="primary"
+              className="spinner"
+            >
+              {console.log('vbh', resolvedData?.page)}
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+            <h2>Database is empty</h2>
+            <p>To view Products upload excel file with the correct format</p>
+          </div>
+        ) : (
+          <Pagination>
+            {console.log("jbjj", resolvedData?.data.pages)}
+            <Pagination.First
+              onClick={() => setPageNumber(1)}
+              disabled={pageNumber === 1}
+            />
+            <Pagination.Prev
+              onClick={() => setPageNumber((old) => Math.max(old - 1, 0))}
+              disabled={pageNumber === 1}
+            />
+            {renderPaginationButton()}
+            <Pagination.Next
+              onClick={() =>
+                setPageNumber((old) =>
+                  !latestData || resolvedData?.data.pages === pageNumber
+                    ? old
+                    : old + 1
+                )
+              }
+              disabled={
+                !resolvedData || resolvedData?.data.pages === pageNumber
+              }
+            />
+            <Pagination.Last
+              onClick={() => setPageNumber(resolvedData?.data.pages)}
+              disabled={
+                !resolvedData || resolvedData?.data.pages === pageNumber
+              }
+            />
+          </Pagination>
+        )}
       </div>
     </>
   );

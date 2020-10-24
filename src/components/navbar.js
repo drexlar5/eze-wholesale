@@ -39,11 +39,12 @@ function Navbar() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('lmlnlnl', event)
     if (!state) {
       return swal("Error", "Select an excel file before submitting", "error");
     }
     saveProductsField(state);
+    event.target.reset();
+    setState(null);
   };
 
   const handleFilterChange = (event) => {
@@ -59,6 +60,7 @@ function Navbar() {
       return swal("Error", "Enter a valid min and max value", "error");
     }
     getProductsField(filter);
+    event.target.reset();
     setFilter(null)
   };
 
@@ -119,7 +121,6 @@ function Navbar() {
             <Form.Control
               type="text"
               name="min"
-              value={filter?.min != null ? `${filter?.min}` : ''}
               onChange={handleFilterChange}
               placeholder="Min"
             />
@@ -129,7 +130,6 @@ function Navbar() {
             <Form.Control
               type="text"
               name="max"
-              value={filter?.max != null ? `${filter?.max}` : ''}
               onChange={handleFilterChange}
               placeholder="Max"
             />

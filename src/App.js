@@ -8,7 +8,7 @@ import CustomRoute from "./utils/custom-route";
 
 const App = CustomRoute((props) => {
   return (
-    <Container fluid style={{ background: "#14161b", minHeight: '101vh' }}>
+    <Container fluid className={"app-container"}>
       <Header />
       <Row>
         <Col sm={3} className={"navbar-col"}>
