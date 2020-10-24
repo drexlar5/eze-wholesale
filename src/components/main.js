@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import swal from "sweetalert";
 import { Card, Button, Badge } from "react-bootstrap";
 import { Row, Pagination } from "react-bootstrap";
 import { useQueryCache, usePaginatedQuery } from "react-query";
 
-import { getProducts, searchProducts } from "../api/api";
+import { getProducts } from "../api/api";
 import "./css/main.css";
 
 function Main({ children }) {
@@ -18,43 +19,58 @@ function Main({ children }) {
   const queryCache = useQueryCache();
   let { resolvedData, latestData, status } = usePaginatedQuery(
     ["products", { page: pageNumber, limit }, searchData, category],
-    searchData ? searchProducts : getProducts
+    getProducts
   );
 
   React.useEffect(() => {
     setCategory(state?.category);
+
     if (state?.data) {
       setSearchData(state?.query);
+      setPageNumber(state?.pageNumber);
       resolvedData = state.data;
+      state.data = null;
     }
-    console.log("page", pageNumber, state, resolvedData);
+
     if (latestData?.data.pages !== pageNumber) {
-      if (state?.query) {
-        queryCache.prefetchQuery(
-          ["products", { page, limit }, state?.query, category],
-          searchProducts
-        );
-      } else {
+      if (!state?.query) {
         setSearchData(null);
-        queryCache.prefetchQuery(
-          ["products", { page, limit }, category],
-          getProducts
-        );
       }
+      queryCache.prefetchQuery(
+        ["products", { page, limit }, null, category],
+        getProducts
+      );
     }
     // eslint-disable-line react-hooks/exhaustive-deps
   }, [latestData, getProducts, pageNumber, state]);
 
   const renderPaginationButton = () => {
-    const buttons = [];
-    const pageCount =
-      resolvedData?.data.pages > 5 ? 5 : resolvedData?.data.pages;
-    for (let i = 1; i <= pageCount; i++) {
+    const lastPage = resolvedData?.data.pages;
+    let delta = 2,
+      left = pageNumber - delta,
+      right = pageNumber + delta + 1,
+      range = [],
+      buttons = [],
+      l;
+
+    for (let i = 1; i <= lastPage; i++) {
+      if (i === 1 || i === lastPage || (i >= left && i < right)) {
+        range.push(i);
+      }
+    }
+
+    for (let i of range) {
+      if (l) {
+        if (i - l === 0) {
+          buttons.push(l + 1);
+        } else if (i - l !== 1) {
+          buttons.push(<Pagination.Ellipsis />);
+        }
+      }
       buttons.push(
         <Pagination.Item
           key={i}
           onClick={() => {
-            setSearchData(null);
             return setPageNumber(i);
           }}
           disabled={pageNumber === i}
@@ -63,17 +79,43 @@ function Main({ children }) {
           {i}
         </Pagination.Item>
       );
+      l = i;
     }
     return buttons;
   };
 
+  const capitalize = (s) => {
+    if (typeof s !== "string") return "";
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
+
   const formatImageName = (name) => name.toLowerCase().split(" ").join("_");
 
-  const dataObj = (data) => (
-    <Card className={"card"}>
+  const formatDeviceName = (name) => {
+    let nameArray = name.split(" ");
+
+    return nameArray
+      .map((item, index) => {
+        if (index === 0 && item.includes("iphone")) {
+          return (item = "iPhone");
+        }
+
+        if (index === 1) {
+          return item.toUpperCase();
+        }
+
+        return capitalize(item);
+      })
+      .join(" ");
+  };
+
+  const dataObj = (data, index) => (
+    <Card className={"card"} key={index}>
       <h5>
         <Badge variant="dark" className={"badge"}>
-          {data.condition}
+          {data.condition === "new"
+            ? capitalize(data.condition)
+            : data.condition.toUpperCase()}
         </Badge>
       </h5>
       <Card.Img
@@ -81,15 +123,23 @@ function Main({ children }) {
         src={`assets/${formatImageName(data.deviceName)}.png`}
       />
       <Card.Body>
-        <Card.Title className={"title"}>{data.deviceName}</Card.Title>
-        <Card.Text className={"text"}>Unlocked | {data.storageSize}</Card.Text>
+        <Card.Title className={"title"}>
+          {formatDeviceName(data.deviceName)}
+        </Card.Title>
+        <Card.Text className={"text"}>
+          Unlocked | {data.storageSize.toUpperCase()}
+        </Card.Text>
         <Card.Text style={{ marginBottom: 0, color: "white" }}>
           Unit Price
         </Card.Text>
         <Card.Text className={"price"}>${data.price}</Card.Text>
         <Card.Text className={"text"}>1500 Available</Card.Text>
         <div className={"button-div"}>
-          <Button variant="primary" className={"button"}>
+          <Button
+            variant="primary"
+            className={"button"}
+            onClick={() => swal("Success", "Item Added to Cart", "success")}
+          >
             {state?.category === "buyRequests" ? "Buy" : "Sell"}
           </Button>
         </div>
@@ -101,28 +151,33 @@ function Main({ children }) {
     <>
       <Row className={"card-row"}>
         {resolvedData?.data &&
-          resolvedData.data.paginatedData.map((data) => dataObj(data))}
+          resolvedData?.data?.paginatedData?.map((data, index) => dataObj(data, index))}
       </Row>
       <div className={"pagination"}>
         <Pagination>
-          <Pagination.First />
+          <Pagination.First
+            onClick={() => setPageNumber(1)}
+            disabled={pageNumber === 1}
+          />
           <Pagination.Prev
             onClick={() => setPageNumber((old) => Math.max(old - 1, 0))}
             disabled={pageNumber === 1}
           />
           {resolvedData && renderPaginationButton()}
-          {/* <Pagination.Ellipsis /> */}
           <Pagination.Next
             onClick={() =>
-              // Here, we use `latestData` so the Next Page
-              // button isn't relying on potentially old data
               setPageNumber((old) =>
-                !latestData || latestData?.pages === pageNumber ? old : old + 1
+                !latestData || resolvedData?.data.pages === pageNumber
+                  ? old
+                  : old + 1
               )
             }
-            disabled={!latestData || latestData?.pages === pageNumber}
+            disabled={!resolvedData || resolvedData?.data.pages === pageNumber}
           />
-          <Pagination.Last />
+          <Pagination.Last
+            onClick={() => setPageNumber(resolvedData?.data.pages)}
+            disabled={!resolvedData || resolvedData?.data.pages === pageNumber}
+          />
         </Pagination>
       </div>
     </>

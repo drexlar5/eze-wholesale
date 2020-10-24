@@ -2,28 +2,29 @@ import React, { useState } from "react";
 import swal from "sweetalert";
 import { navigate } from "@reach/router";
 import { Col, Row, Form, Button } from "react-bootstrap";
-import { searchProducts } from "../api/api";
+import { useProducts } from "../context/context";
+import { getProducts } from "../api/api";
 import "./css/header.css";
 
 function Header() {
   const [state, setState] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [category, setCategory] = useState(null);
-  const page = pageNumber + 1;
+  const { product: category } = useProducts();
+  const pageNumber = 1;
+
   const limit = 12;
 
   const searchProductsField = async (value) => {
-    let data = await searchProducts(
+    let data = await getProducts(
       "products",
       { page: pageNumber, limit },
       value,
       category
     );
 
-    const linkId = "buy-request";
+    const linkId = category === "buyRequests" ? "buy-request" : "sell-request";
 
     navigate(`/${linkId}`, {
-      state: { category: "buyRequests", data, query: value, pageNumber: 1 },
+      state: { category, data, query: value, pageNumber },
     });
   };
 
@@ -33,6 +34,7 @@ function Header() {
       return swal("Error", "Enter a search word", "error");
     }
     searchProductsField(state);
+    setState(null);
   };
 
   const handleChange = (event) => {
@@ -53,6 +55,7 @@ function Header() {
               <Form.Control
                 type="text"
                 placeholder="Enter Search Term (eg. iPhone x or 128gb)"
+                value={state != null ? `${state}` : ""}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -62,7 +65,7 @@ function Header() {
           </Form>
         </Col>
         <Col sm={6} className={"header-image-column"}>
-          <img src={"assets/header.png"} className={"header-img"} />
+          <img src={"assets/header.png"} className={"header-img"} alt="" />
         </Col>
       </Row>
     </div>
