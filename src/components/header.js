@@ -34,7 +34,6 @@ function Header() {
       return swal("Error", "Enter a search word", "error");
     }
     searchProductsField(state);
-    event.target.reset();
     setState(null);
   };
 
@@ -56,6 +55,7 @@ function Header() {
               <Form.Control
                 type="text"
                 placeholder="Enter Search Term (eg. iPhone x or 128gb)"
+                value={state ? state : ""}
                 onChange={handleChange}
               />
             </Form.Group>

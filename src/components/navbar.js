@@ -32,6 +32,7 @@ function Navbar() {
 
     const linkId = category === "buyRequests" ? "buy-request" : "sell-request";
 
+    setFilter(null);
     navigate(`/${linkId}`, {
       state: { category, data, query: value, pageNumber},
     });
@@ -60,7 +61,6 @@ function Navbar() {
       return swal("Error", "Enter a valid min and max value", "error");
     }
     getProductsField(filter);
-    event.target.reset();
   };
 
   const handleChange = (event) => {
@@ -119,6 +119,7 @@ function Navbar() {
             <Form.Control
               type="text"
               name="min"
+              value={filter?.min ? filter.min : ""}
               onChange={handleFilterChange}
               placeholder="Min"
             />
@@ -128,6 +129,7 @@ function Navbar() {
             <Form.Control
               type="text"
               name="max"
+              value={filter?.max ? filter.max : ""}
               onChange={handleFilterChange}
               placeholder="Max"
             />
