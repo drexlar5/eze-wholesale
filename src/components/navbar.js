@@ -16,7 +16,7 @@ function Navbar() {
   
   const limit = 12;
 
-  const [mutateSaveProducts, { status }] = useMutation(saveProducts);
+  const [mutateSaveProducts] = useMutation(saveProducts);
 
   const saveProductsField = async (value) => {
     await mutateSaveProducts({ value });

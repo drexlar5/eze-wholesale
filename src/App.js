@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import Header from "./components/header";
 import Main from "./components/main";
 import Navbar from "./components/navbar";

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import swal from "sweetalert";
-import { Card, Button, Badge, Spinner } from "react-bootstrap";
+import { Card, Button, Badge } from "react-bootstrap";
 import { Row, Pagination } from "react-bootstrap";
 import { useQueryCache, usePaginatedQuery } from "react-query";
 
@@ -17,7 +17,7 @@ function Main({ children }) {
   const limit = 12;
 
   const queryCache = useQueryCache();
-  let { resolvedData, latestData, status } = usePaginatedQuery(
+  let { resolvedData, latestData } = usePaginatedQuery(
     ["products", { page: pageNumber, limit }, searchData, category],
     getProducts
   );
