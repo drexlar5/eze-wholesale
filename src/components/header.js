@@ -54,7 +54,7 @@ function Header() {
             <Form.Group className={"form-group"}>
               <Form.Control
                 type="text"
-                placeholder="Enter Search Term (eg. iPhone x or 128gb)"
+                placeholder="Enter Search Term (eg. iPhone x, 128gb or A1)"
                 value={state ? state : ""}
                 onChange={handleChange}
               />

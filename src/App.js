@@ -8,7 +8,7 @@ import CustomRoute from "./utils/custom-route";
 
 const App = CustomRoute((props) => {
   return (
-    <Container fluid className={"app-container"}>
+    <div  className={"app-container"}>
       <Header />
       <Row>
         <Col sm={3} className={"navbar-col"}>
@@ -18,7 +18,7 @@ const App = CustomRoute((props) => {
           <Main>{props.children}</Main>
         </Col>
       </Row>
-    </Container>
+    </div>
   );
 });
 
